@@ -6,21 +6,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ltp.gradesubmission.entity.Grade;
+import com.ltp.gradesubmission.entity.Student;
 import com.ltp.gradesubmission.repository.GradeRepository;
+import com.ltp.gradesubmission.repository.StudentRepository;
 
 @Service
 public class GradeServiceImpl implements GradeService {
 
     @Autowired 
     GradeRepository gradeRepository;
+
+    @Autowired
+    StudentRepository studentRepository;
     
     @Override
     public Grade getGrade(Long studentId, Long courseId) {
-        return null;
+        return gradeRepository.findByStudentId(studentId);
     }
 
     @Override
     public Grade saveGrade(Grade grade, Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).get();  //retiev the student with the id
+        grade.setStudent(student);  //save the student to student field of the grade
         return gradeRepository.save(grade);
     }
 
