@@ -1,11 +1,14 @@
 package com.ltp.gradesubmission.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.ltp.gradesubmission.entity.Course;
 import com.ltp.gradesubmission.repository.CourseRepository;
+import com.ltp.gradesubmission.exception.CourseNotFoundException;
+
 
 import lombok.AllArgsConstructor;
 
@@ -17,7 +20,13 @@ public class CourseServiceImpl implements CourseService {
     
     @Override
     public Course getCourse(Long id) {
-        return courseRepository.findById(id).get();
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isPresent()){
+            return course.get(); //unwrapping the optional
+        }else{
+            throw new CourseNotFoundException(id);
+        }
+        
     }
 
     @Override
@@ -35,4 +44,8 @@ public class CourseServiceImpl implements CourseService {
         return (List<Course>)courseRepository.findAll();
     }
 
+    static Course unwrapCourse(Optional<Course> entity, Long id) {
+        if (entity.isPresent()) return entity.get();
+        else throw new CourseNotFoundException(id);
+    }
 }
