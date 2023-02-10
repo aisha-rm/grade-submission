@@ -29,18 +29,14 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public Grade getGrade(Long studentId, Long courseId) {
         Optional<Grade> grade = gradeRepository.findByStudentIdAndCourseId(studentId, courseId);
-        if (grade.isPresent()){
-            return grade.get(); //unwrapping the optional
-        }else{
-            throw new GradeNotFoundException(studentId, courseId);
-        }
+        return unwrapGrade(grade, studentId, courseId);
     }
 
     @Override
     public Grade saveGrade(Grade grade, Long studentId, Long courseId) {
-        Student student = studentRepository.findById(studentId).get();  //retiev the student with the id
-        Course course = courseRepository.findById(courseId).get();
-        grade.setStudent(student);  //save the student to student field of the grade
+        Student student = StudentServiceImpl.unwrapStudent(studentRepository.findById(studentId), studentId);
+        Course course = CourseServiceImpl.unwrapCourse(courseRepository.findById(courseId), courseId);
+        grade.setStudent(student);  
         grade.setCourse(course);
         return gradeRepository.save(grade);
     }
@@ -48,13 +44,9 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public Grade updateGrade(String score, Long studentId, Long courseId) {
         Optional<Grade> grade = gradeRepository.findByStudentIdAndCourseId(studentId, courseId);
-        if (grade.isPresent()){
-            Grade unwrappedGrade = grade.get();
-            unwrappedGrade.setScore(score);
-            return gradeRepository.save(unwrappedGrade);
-        }else{
-            throw new GradeNotFoundException(studentId, courseId);
-        }
+        Grade unwrappedGrade = unwrapGrade(grade, studentId, courseId);
+        unwrappedGrade.setScore(score);
+        return gradeRepository.save(unwrappedGrade);
     }
 
     @Override
@@ -77,4 +69,8 @@ public class GradeServiceImpl implements GradeService {
         return (List<Grade>) gradeRepository.findAll();
     }
 
+    static Grade unwrapGrade(Optional<Grade> entity, Long studentId, Long courseId) {
+        if (entity.isPresent()) return entity.get();
+        else throw new GradeNotFoundException(studentId, courseId);
+    }
 }
