@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,10 +36,12 @@ public class Student {
 
     @NonNull
     @Column(name = "name", nullable = false)
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
     @NonNull
     @Column(name = "birth_date", nullable = false)
+    @Past(message = "The birth date must be in the past")
     private LocalDate birthDate;
 
     @JsonIgnore

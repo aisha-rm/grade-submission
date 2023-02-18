@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/student")
@@ -30,7 +32,7 @@ public class StudentController {
     }
     
     @PostMapping
-    public ResponseEntity<Student> saveStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> saveStudent(@Valid @RequestBody Student student) {
         return new ResponseEntity<>(studentService.saveStudent(student), HttpStatus.CREATED); //student obj returned from save student added to response entity
     }
     
