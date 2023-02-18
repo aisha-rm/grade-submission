@@ -1,12 +1,15 @@
 package com.ltp.gradesubmission.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.ltp.gradesubmission.entity.Course;
+import com.ltp.gradesubmission.entity.Student;
 import com.ltp.gradesubmission.repository.CourseRepository;
+import com.ltp.gradesubmission.repository.StudentRepository;
 import com.ltp.gradesubmission.exception.CourseNotFoundException;
 
 
@@ -17,7 +20,8 @@ import lombok.AllArgsConstructor;
 public class CourseServiceImpl implements CourseService {
 
     CourseRepository courseRepository;
-    
+    StudentRepository studentRepository;
+
     @Override
     public Course getCourse(Long id) {
         Optional<Course> course = courseRepository.findById(id);
@@ -37,6 +41,21 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getCourses() {
         return (List<Course>)courseRepository.findAll();
+    }
+
+    @Override
+    public Course addStudentToCourse(Long studentId, Long courseId) {
+        Course course = getCourse(courseId);
+        Optional<Student> student = studentRepository.findById(studentId);
+        Student unwrappedStudent = StudentServiceImpl.unwrapStudent(student, studentId);
+        course.getStudents().add(unwrappedStudent);
+        return courseRepository.save(course);
+    }
+
+    @Override
+    public Set<Student> getEnrolledStudents(Long courseId) {
+        Course course = getCourse(courseId);
+        return course.getStudents();
     }
 
     static Course unwrapCourse(Optional<Course> entity, Long id) {
