@@ -51,7 +51,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
-        ErrorResponse errorResponse = new ErrorResponse(Arrays.asList("We cannot proocess your request"));
+        ErrorResponse errorResponse = new ErrorResponse(Arrays.asList("Data Integrity Violation: we cannot process your request"));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
