@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.ltp.gradesubmission.security.filter.AuthenticationFilter;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +20,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setFilterProcessesUrl("/authenticate");
         http        
             .headers().frameOptions().disable() // spring Security prevents h2 rendering within an iframe. disables its prevention.
             .and()
@@ -26,6 +31,7 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll() //all all ost requests to path register
             .anyRequest().authenticated() //all other requests need authentication
             .and()
+            .addFilter(authenticationFilter)  //its attempAuth () only gets called here if user is trying to authenticate 
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
