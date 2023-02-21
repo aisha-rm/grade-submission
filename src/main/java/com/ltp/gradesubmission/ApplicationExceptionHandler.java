@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.ltp.gradesubmission.exception.CourseNotFoundException;
 import com.ltp.gradesubmission.exception.ErrorResponse;
 import com.ltp.gradesubmission.exception.GradeNotFoundException;
 import com.ltp.gradesubmission.exception.StudentNotEnrolledException;
-import com.ltp.gradesubmission.exception.StudentNotFoundException;
+import com.ltp.gradesubmission.exception.EntityNotFoundException;
 
 
 
@@ -37,7 +36,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({CourseNotFoundException.class, GradeNotFoundException.class, StudentNotFoundException.class, StudentNotEnrolledException.class})
+    @ExceptionHandler({EntityNotFoundException.class, GradeNotFoundException.class, StudentNotEnrolledException.class})
     public ResponseEntity<Object> hndleResourceNotFoundException(RuntimeException ex){
         ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
