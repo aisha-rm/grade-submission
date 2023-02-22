@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.ltp.gradesubmission.security.filter.AuthenticationFilter;
+import com.ltp.gradesubmission.security.filter.ExceptionHandlerFilter;
 
 import lombok.AllArgsConstructor;
 
@@ -28,9 +29,10 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/h2/**").permitAll() // allows access the h2 console without the need to authenticate. ' ** '  instead of ' * ' because multiple path levels will follow /h2.
-            .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll() //all all ost requests to path register
+            .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll() //all all post requests to path register
             .anyRequest().authenticated() //all other requests need authentication
             .and()
+            .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
             .addFilter(authenticationFilter)  //its attempAuth () only gets called here if user is trying to authenticate 
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
