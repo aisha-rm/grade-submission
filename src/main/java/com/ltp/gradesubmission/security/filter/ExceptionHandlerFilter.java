@@ -1,4 +1,5 @@
 package com.ltp.gradesubmission.security.filter;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
 
 import javax.servlet.FilterChain;
@@ -23,12 +24,16 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("Username doesn't exist");
                 response.getWriter().flush();
+            } catch (JWTVerificationException e) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("JWT NOT VALID");
+                response.getWriter().flush();
             }catch (RuntimeException e) {//Can have as many catch blocks as  needed
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //can add json body to the response as follows of leave it here
                 response.getWriter().write("BAD REQUEST");
                 response.getWriter().flush();
             } 
 
-         }
+    }
    
 }

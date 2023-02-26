@@ -9,6 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.ltp.gradesubmission.security.filter.AuthenticationFilter;
 import com.ltp.gradesubmission.security.filter.ExceptionHandlerFilter;
+import com.ltp.gradesubmission.security.filter.JWTAuthorizationFilter;
 import com.ltp.gradesubmission.security.manager.CustomAuthenticationManager;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class SecurityConfig {
             .and()
             .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
             .addFilter(authenticationFilter)  //its attempAuth () only gets called here if user is trying to authenticate 
+            .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }

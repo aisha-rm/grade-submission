@@ -25,8 +25,9 @@ public class UserController {
     UserService userService;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findById(@PathVariable Long id) {
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<String> findById(@PathVariable Long id) {
+		//returns only the username as string to secure sensitive info
+		return new ResponseEntity<>(userService.getUser(id).getUsername(), HttpStatus.OK);
 	}
 
     @PostMapping("/register")
