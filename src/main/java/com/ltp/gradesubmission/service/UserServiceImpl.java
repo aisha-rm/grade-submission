@@ -31,6 +31,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return unwrapUser(user, 404L);   //unwrap expects id, so placeholding with 404
+    }
+
+    @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         //encode password and set before saving user
@@ -41,6 +47,8 @@ public class UserServiceImpl implements UserService {
         if (entity.isPresent()) return entity.get();
         else throw new EntityNotFoundException(id, User.class);
     }
+
+    
 
    
 }
