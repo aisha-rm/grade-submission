@@ -2,11 +2,12 @@
 
 ## Description:
 
-A REST API that handles HTTP requests to perform CRUD operations on a grades database.
+A REST API Java Application for a student grades mangement system.
 
 ## Requirements
 
 - Programming Language: Java
-- Runtime: JDK 11 
-- Database Engine: MySQL
-- API Documentation: OpenAPI and Postman
+- Runtime: JDK 11  
+
+
+Accessing the Database
